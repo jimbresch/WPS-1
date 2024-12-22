@@ -732,6 +732,18 @@ C  SET ARGUMENTS
      &                         (10.**(-1.*gfld%ipdtmpl(11)))
                    glevel2 = 100. * gfld%ipdtmpl(15)*
      &                         (10.**(-1.*gfld%ipdtmpl(14)))
+! The following if-block accounts for the 2024 changes to IFS soil fields. They use a local table.
+                  if (icenter .eq. 98 .and.
+     &                gfld%discipline .eq. 192 .and.
+     &                gfld%ipdtmpl(1) .eq. 128 .and.
+     &                gfld%ipdtmpl(10).eq. 106) then
+                      glevel1 = gfld%ipdtmpl(12)
+                      glevel2 = gfld%ipdtmpl(15)
+                      if ( glevel1 .eq. 100. .and.
+     &                     glevel2 .lt. -1.e+9 ) then
+                        glevel2 = 255.
+                      endif
+                  endif
                 end if
                 TMP8LOOP: do j = 1, maxvar
                   if ((g2code(4,j) .eq. 106) .and.
